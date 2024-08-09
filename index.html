@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- BOOTSTRAP 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <!-- FONT-AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- AXIOS -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@latest/dist/axios.min.js"></script>
+    <!-- VUE -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@latest"></script>
+    <title>STSconfig site</title>
+</head>
+
+<body>
+    <div class="container p-3 mt-5">
+        <div class="text-center">
+            <h2><b>STSconfig site</b></h2>
+            <h7><a href="https://localhost:7142/api/Client/Filter" target="_blank">.json-string URL</a>
+            </h7>
+        </div>
+
+        <div id="app">
+            <!-- GET ALL SEKTION -->
+            <h3>Get all</h3>
+            <button id="getAllButton" @click="getAllObjs" class="btn btn-info text-light mb-2"><b>Get all</b></button>
+
+            <!-- GET ALL: filter -->
+            <div class="input-group mb-3 mt-3">
+                <span class="input-group-text bg-info text-light"><b>Filter by ClientId</b></span>
+                <input v-model="filterInputValue" type="text" placeholder="ClientId">
+            </div>
+
+            <!-- OBJ display -->
+            <table v-if="objList.length > 0" class="table table-bordered">
+                <thead class="table-info">
+                    <th>Id
+                        <button @click="sortById()" class="btn btn-outline"><i class="fas fa-sort-up"></i></button>
+                        <button @click="sortByIdDesc()" class="btn btn-outline"><i class="fas fa-sort-down"></i></button>
+                    </th>
+                    <th>ClientId
+                        <button @click="sortByClientId()" class="btn btn-outline"><i class="fas fa-sort-up"></i></button>
+                        <button @click="sortByClientIdDesc()" class="btn btn-outline"><i class="fas fa-sort-down"></i></button>
+                    </th>
+                    <th>ClientName
+                        <button @click="sortByClientName()" class="btn btn-outline"><i class="fas fa-sort-up"></i></button>
+                        <button @click="sortByClientNameDesc()" class="btn btn-outline"><i class="fas fa-sort-down"></i></button>
+                    </th>
+                    <th>Enabled
+                        <button @click="sortByEnabled()" class="btn btn-outline"><i class="fas fa-sort-up"></i></button>
+                        <button @click="sortByEnabledDesc()" class="btn btn-outline"><i class="fas fa-sort-down"></i></button>
+                    </th>
+                    <th>Created
+                        <button @click="sortByCreatedAscending()" class="btn btn-outline"><i class="fas fa-sort-up"></i></button>
+                        <button @click="sortByCreatedDescending()" class="btn btn-outline"><i class="fas fa-sort-down"></i></button>
+                    </th>
+                </thead>
+                <tbody>
+                    <tr v-for="obj in filterByClientId(objList)">
+                        <td>{{obj.id}}</td>
+                        <td>{{obj.clientId}}</td>
+                        <td>{{obj.clientName}}</td>
+                        <td>{{obj.enabled}}</td>
+                        <td>{{obj.created}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div v-else>No objects with this string combination</div>
+
+            <!-- GET(ID) SEKTION -->
+            <h3>Get(id)</h3>
+            <div class="input-group mb-3">
+                <input v-model="getIdInput" placeholder="Id" type="number" />
+                <button @click="getById(getIdInput)" class="btn btn-info text-light"><b>Get(id)</b></button>
+            </div>
+            <div>{{getMessage}}</div>
+            <div v-if="singleObj">
+                {{ singleObj }}
+                <!-- {{singleObj.id}} {{singleObj.manufacturer}} {{ singleObj.year}} {{ singleObj.price}} {{ singleObj.rating}} -->
+            </div>
+            <!-- <div v-else>No such obj</div> -->
+
+            <!-- CREATE SEKTION -->
+            <h3>Create</h3>
+            <div class="input-group mb-3">
+                <input v-model="addData.clientId" placeholder="ClientId" type="text" />
+                <input v-model="addData.clientName" placeholder="ClientName" type="text" />
+                <input v-model="addData.enable" placeholder="Enable" type="boolean" />
+                <input v-model="addData.created" placeholder="Created" type="datetime" />
+                <button @click="addObj()" class="btn btn-success"><b>Create</b></button>
+            </div>
+            <div>{{addMessage}}</div>
+
+            <!-- UPDATE SEKTION -->
+            <h3>Update</h3>
+            <div class="input-group mb-3">
+                <input v-model.number="updData.id" placeholder="Id" type="number" />
+                <input v-model="updData.manufacturer" placeholder="Manufacturer" type="text" />
+                <input v-model="updData.year" placeholder="Year" type="number" />
+                <input v-model="updData.price" placeholder="Price" type="number" />
+                <input v-model="updData.rating" placeholder="Rating" type="number" />
+                <button @click="updateObj()" class="btn btn-warning text-light"><b>Update</b></button>
+            </div>
+            <div>{{updateMessage}}</div>
+
+            <!-- DELETE SEKTION -->
+            <h3>Delete(id)</h3>
+            <div class="input-group mb-3">
+                <input v-model="deleteIdInputValue" placeholder="Id" type="number" />
+                <button @click="deleteObj(deleteIdInputValue)" class="btn btn-danger text-white"><b>Delete</b></button>
+            </div>
+            <div>{{deleteMessage}}</div>
+
+        </div>
+    </div>
+    <script src="js/index.js"></script>
+</body>
+
+</html>
